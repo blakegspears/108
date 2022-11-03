@@ -110,4 +110,4 @@ def count_color(color):
     return json.dumps(count)
 
 
-app.run(debug=True)
+#app.run(debug=True)
