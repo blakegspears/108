@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask, request, abort
 import json
-from config import me, hello
+from config import me, db
 from mock_data import catalog
 
 app = Flask("Server")
@@ -35,14 +35,27 @@ def version():
         "developer": me
     }
 
-    hello()
-
     return json.dumps(v)
 
 
 @app.get("/api/catalog")
 def get_catalog():
     return json.dumps(catalog)
+
+
+@app.post("/api/catalog")
+def save_product():
+    product = request.get_json()
+
+    if product is None:
+        return abort(400, "Product required")
+
+    db.products.insert_one(product)
+    print("-----------------------")
+    print(product)
+    print("--------------------------")
+    
+    return json.dumps(product)
 
 
 @app.get("/api/products/count")
@@ -110,4 +123,4 @@ def count_color(color):
     return json.dumps(count)
 
 
-#app.run(debug=True)
+# app.run(debug=True)
